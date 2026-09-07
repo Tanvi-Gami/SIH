@@ -1,0 +1,28 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+asyncpg==0.29.0
+pydantic==2.9.2
+pydantic-settings==2.5.2
+python-dotenv==1.0.1
+python-multipart==0.0.9
+
+# AI stack
+openai>=1.52.0,<2.0.0
+langchain>=0.3.4,<0.4.0
+langchain-openai>=0.2.3,<0.3.0
+langchain-core>=0.3.12,<0.4.0
+langgraph>=0.2.34,<0.3.0
+
+# Vector store
+pinecone-client==5.0.1
+
+# Resume/document parsing
+pypdf==5.0.1
+python-docx==1.1.2
+
+# Local (mock) semantic similarity fallback
+scikit-learn==1.5.2
+numpy==1.26.4
+
+# Testing
+pytest==8.3.3

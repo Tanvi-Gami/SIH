@@ -1,0 +1,71 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sih-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sih_user
+      POSTGRES_PASSWORD: sih_password
+      POSTGRES_DB: sih_platform
+    ports:
+      - "5433:5432" # host 5433 -> avoids clashing with a local Postgres already on 5432
+    volumes:
+      - sih_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sih_user -d sih_platform"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend-fastapi:
+    build:
+      context: ./backend-fastapi
+    container_name: sih-fastapi
+    restart: unless-stopped
+    env_file:
+      - ./backend-fastapi/.env
+    environment:
+      DATABASE_URL: postgresql://sih_user:sih_password@postgres:5432/sih_platform
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  backend-express:
+    build:
+      context: .
+      dockerfile: backend-express/Dockerfile
+    container_name: sih-express
+    restart: unless-stopped
+    env_file:
+      - ./backend-express/.env
+    environment:
+      DATABASE_URL: postgres://sih_user:sih_password@postgres:5432/sih_platform
+      FASTAPI_URL: http://backend-fastapi:8000
+      CORS_ORIGIN: http://localhost:5173
+    depends_on:
+      postgres:
+        condition: service_healthy
+      backend-fastapi:
+        condition: service_started
+    ports:
+      - "5000:5000"
+    volumes:
+      - sih_uploads:/app/src/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:5000
+    container_name: sih-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend-express
+    ports:
+      - "5173:80"
+
+volumes:
+  sih_postgres_data:
+  sih_uploads:

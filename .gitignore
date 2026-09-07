@@ -1,0 +1,70 @@
+# ============================================================================
+# Skillbridge (26SIH044) — root .gitignore
+# Covers frontend/ (Node/Vite), backend-express/ (Node), backend-fastapi/
+# (Python), Docker, and general OS/editor noise, for the whole repo.
+# ============================================================================
+
+# ---- Environment / secrets ----
+.env
+.env.local
+.env.*.local
+**/.env
+!**/.env.example
+
+# ---- Node / npm (frontend, backend-express) ----
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+
+# ---- Frontend build output ----
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+# ---- Python (backend-fastapi) ----
+**/venv/
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+**/*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ---- Backend build/runtime artifacts ----
+backend-fastapi/dist/
+backend-express/coverage/
+frontend/coverage/
+
+# ---- User-uploaded content (keep folder structure only) ----
+backend-express/src/uploads/**/*
+!backend-express/src/uploads/**/.gitkeep
+
+# ---- Database ----
+*.sql.gz
+*.dump
+pgdata/
+
+# ---- Docker ----
+docker-compose.override.yml
+
+# ---- Logs ----
+*.log
+logs/
+
+# ---- Editor / IDE ----
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# ---- Misc ----
+*.tmp
+*.bak
